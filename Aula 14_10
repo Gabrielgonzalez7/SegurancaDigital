@@ -1,0 +1,54 @@
+## 1. Registro do bloco (whois)
+
+## 2. DNS do domínio
+
+## 3. Varredura do host principal — 198.51.100.10
+
+## 4. Varredura do segundo host — 198.51.100.12 (vpn)
+
+# **RODADA 1**
+
+| Porta  | Produto e versão	  |  Parece antigo/suspeito? 	 |
+| ---------| ----------------------------- | ------------------------------------ |
+| 21/tcp |  ftp, vsftpd 2.3.4          |  Sim, suspeito e vulnerável |
+| 22/tcp | SSH, OpenSSH 9.6    | Sim, é antiga	(2023)	|
+| 80 e 443|ssl/http Apache httpd 2.4.49| Sim, é antiga (2021)|
+|3306/tcp|  mysql, MySQL 5.7.33| Sim, é antiga (2021)		|
+|8080/tcp|  http Apache Tomcat/Coyote| Depende da versão |
+
+a) Do bloco autorizado pelo cliente
+
+b) Dentro:
+www.exemplo.com. A 198.51.100.10
+loja.exemplo.com. A 198.51.100.10
+vpn.exemplo.com. A 198.51.100.12
+
+Fora: 
+dev.exemplo.com. A 203.0.113.50
+Porque foi definido pelo contratante apenas o bloco 198.51.100.0/2
+
+# **RODADA 2**
+
+| Serviço		| Vulnerabilidade		| Classe					| Confiança |
+| -----------------  | ------------------------------  | -------------------------------------  | ------------- |
+| vsftpd 2.3.4	| CVE-2011-2523		| Execução remota(RCE) 	| Alta	   |
+| Apache 2.4.49 | CVE-2021-42013	| Path transversal e RCE	|  Média	   |
+| Tomcat 		  | CVE-2026-87022	| WebSocket Smuggling		| Baixa	   |
+| MySQL 5.7.33 | CVE-2021-2146		| RCE					| Baixa	   |
+| OpenSSH 9.6  | CVE-2023-48795	| Terrapin Prefix Truncation	| Média	   |
+
+	- Tomcat, pois possui várias versões.
+
+
+# **RODADA 3**
+
+|Ordem	|Serviço			|Por que nessa posição?|
+----------	|--------------------------|--------------------------------	|
+|1º		|Apache 2.4.49	|Possibilidade de acessar arquivos e enviar arquivos maliciosos|
+|2º		|vsftpd 2.3.4		|Possibilidade de executar comandos remotamente|
+|3º		|Tomcat			|Possível vazamento de dados|
+|4º		|OpenSSH 9.6		|Possibilidade de acesso indevido ao servidor|
+|5º		|MySQL 5.7.33	|Possibilidade de acessar ou alterar dados do banco|
+
+	- Ignorar se a vulnerabilidade pode ser acessada de modo fácil e o impacto no sistema
+
