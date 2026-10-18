@@ -1,54 +1,275 @@
-## 1. Registro do bloco (whois)
+1. Registro do bloco (whois) 
 
-## 2. DNS do domínio
+2. DNS do domínio 
 
-## 3. Varredura do host principal — 198.51.100.10
+3. Varredura do host principal — 198.51.100.10 
 
-## 4. Varredura do segundo host — 198.51.100.12 (vpn)
+4. Varredura do segundo host — 198.51.100.12 (vpn) 
 
-# **RODADA 1**
+RODADA 1 
 
-| Porta  | Produto e versão	  |  Parece antigo/suspeito? 	 |
-| ---------| ----------------------------- | ------------------------------------ |
-| 21/tcp |  ftp, vsftpd 2.3.4          |  Sim, suspeito e vulnerável |
-| 22/tcp | SSH, OpenSSH 9.6    | Sim, é antiga	(2023)	|
-| 80 e 443|ssl/http Apache httpd 2.4.49| Sim, é antiga (2021)|
-|3306/tcp|  mysql, MySQL 5.7.33| Sim, é antiga (2021)		|
-|8080/tcp|  http Apache Tomcat/Coyote| Depende da versão |
+Porta 
 
-a) Do bloco autorizado pelo cliente
+Produto e versão 
 
-b) Dentro:
-www.exemplo.com. A 198.51.100.10
-loja.exemplo.com. A 198.51.100.10
-vpn.exemplo.com. A 198.51.100.12
+Parece antigo/suspeito? 
 
-Fora: 
-dev.exemplo.com. A 203.0.113.50
-Porque foi definido pelo contratante apenas o bloco 198.51.100.0/2
+21/tcp 
 
-# **RODADA 2**
+ftp, vsftpd 2.3.4 
 
-| Serviço		| Vulnerabilidade		| Classe					| Confiança |
-| -----------------  | ------------------------------  | -------------------------------------  | ------------- |
-| vsftpd 2.3.4	| CVE-2011-2523		| Execução remota(RCE) 	| Alta	   |
-| Apache 2.4.49 | CVE-2021-42013	| Path transversal e RCE	|  Média	   |
-| Tomcat 		  | CVE-2026-87022	| WebSocket Smuggling		| Baixa	   |
-| MySQL 5.7.33 | CVE-2021-2146		| RCE					| Baixa	   |
-| OpenSSH 9.6  | CVE-2023-48795	| Terrapin Prefix Truncation	| Média	   |
+Sim, suspeito e vulnerável 
 
-	- Tomcat, pois possui várias versões.
+22/tcp 
 
+SSH, OpenSSH 9.6 
 
-# **RODADA 3**
+Sim, é antiga (2023) 
 
-|Ordem	|Serviço			|Por que nessa posição?|
-----------	|--------------------------|--------------------------------	|
-|1º		|Apache 2.4.49	|Possibilidade de acessar arquivos e enviar arquivos maliciosos|
-|2º		|vsftpd 2.3.4		|Possibilidade de executar comandos remotamente|
-|3º		|Tomcat			|Possível vazamento de dados|
-|4º		|OpenSSH 9.6		|Possibilidade de acesso indevido ao servidor|
-|5º		|MySQL 5.7.33	|Possibilidade de acessar ou alterar dados do banco|
+80 e 443 
 
-	- Ignorar se a vulnerabilidade pode ser acessada de modo fácil e o impacto no sistema
+ssl/http Apache httpd 2.4.49 
 
+Sim, é antiga (2021) 
+
+3306/tcp 
+
+mysql, MySQL 5.7.33 
+
+Sim, é antiga (2021) 
+
+8080/tcp 
+
+http Apache Tomcat/Coyote 
+
+Depende da versão 
+
+a) Do bloco autorizado pelo cliente 
+
+b) Dentro: www.exemplo.com. A 198.51.100.10 loja.exemplo.com. A 198.51.100.10 vpn.exemplo.com. A 198.51.100.12 
+
+Fora: dev.exemplo.com. A 203.0.113.50 Porque foi definido pelo contratante apenas o bloco 198.51.100.0/2 
+
+RODADA 2 
+
+Serviço 
+
+Vulnerabilidade 
+
+Classe 
+
+Confiança 
+
+vsftpd 2.3.4 
+
+CVE-2011-2523 
+
+Execução remota(RCE) 
+
+Alta 
+
+Apache 2.4.49 
+
+CVE-2021-42013 
+
+Path transversal e RCE 
+
+Média 
+
+Tomcat 
+
+CVE-2026-87022 
+
+WebSocket Smuggling 
+
+Baixa 
+
+MySQL 5.7.33 
+
+CVE-2021-2146 
+
+RCE 
+
+Baixa 
+
+OpenSSH 9.6 
+
+CVE-2023-48795 
+
+Terrapin Prefix Truncation 
+
+Média 
+
+- Tomcat, pois possui várias versões. 
+  
+
+RODADA 3 
+
+Ordem 
+
+Serviço 
+
+Por que nessa posição? 
+
+1º 
+
+Apache 2.4.49 
+
+Possibilidade de acessar arquivos e enviar arquivos maliciosos 
+
+2º 
+
+vsftpd 2.3.4 
+
+Possibilidade de executar comandos remotamente 
+
+3º 
+
+Tomcat 
+
+Possível vazamento de dados 
+
+4º 
+
+OpenSSH 9.6 
+
+Possibilidade de acesso indevido ao servidor 
+
+5º 
+
+MySQL 5.7.33 
+
+Possibilidade de acessar ou alterar dados do banco 
+
+- Ignorar se a vulnerabilidade pode ser acessada de modo fácil e o impacto no sistema 
+
+ 
+
+RODADA 4 
+
+Falha 
+
+Tipo  
+
+Explorador Provável 
+
+Condição a confirmar 
+
+vsftpd 2.3.4 
+
+Remoto 
+
+Backdoor conhecido no códgio do serviço 
+
+Confirmar quer é a versão 2.3.4 q que a porta 21 está acessível 
+
+Apache 
+
+2.4.49 
+
+Remoto / Web 
+
+Exploid público de path traversal/RCE 
+
+Confirmar se o mod_cgi está ativo no servidor 
+
+Tomcat 
+
+Web 
+
+Senha padrão no painel admin 
+
+Confirmar versão exata e se o manager usa login padrão 
+
+MySQL 5.7.33 
+
+Remoto (Depende de autenticação) 
+
+Credenciais vazadas no banco exposto 
+
+Confirmar se há usuário com senha fraca  
+
+ 
+
+ 
+
+O vsftpd 2.3.4, pois essa versão possui um backdoor conhecido que facilita a invasão. 
+
+Sim, o Tomcat. Primeiro, é preciso conseguir acesso ao painel administrativo. Depois, é possível enviar um arquivo malicioso para executar comandos no servidor. 
+
+RODADA 5 
+
+Pergunta 
+
+Cálculo 
+
+Resposta 
+
+Quantos bits de host tem um /27? 
+
+32(total) - 27(rede) 
+
+5 bits 
+
+Quantos endereços no total? (2^bits) 
+
+2^5 
+
+32 endereços 
+
+Quantos endereços úteis? (total − 2) 
+
+32 – 2(total – rede e broadcast 
+
+30 endereços 
+
+Endereço de rede 
+
+É sempre o primeiro endereço do bloco 
+
+198.51.100.0 
+
+Endereço de broadcast 
+
+É sempre o último endereço do bloco 
+
+195.51.100.31 
+
+Faixa útil (primeiro .. último) 
+
+Tudo entre rede e broadcast, sem incluir eles 
+
+198.51.100.1 até 198.51.100.30 
+
+ 
+
+30 endereços podem ser utilizados neste contrato. Está autorizado a testapor intieor o bloco 198.51.100.0/27. Apenas a faixa .1 à .30 correspomde a máquina de verdade. Como dito anteriormente, .0 e .31 são respectivamente rede e broadcast. 
+
+ 
+
+Prefixo 
+
+Bits de host 
+
+Total de endereços(2^bits) 
+
+Hosts úteis 
+
+/28 
+
+32 – 28 = 4 
+
+ 2â=16 
+
+16 – 2= 14 
+
+/26 
+
+32-26=6 
+
+2^6=64 
+
+64-2=62 
+
+ 
+ 
